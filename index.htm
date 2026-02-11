@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uganda Adventures - Tours & Travel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #2c3e50;
+            background: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 1rem 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.4s ease;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -6px;
+            left: 0;
+            background: #ff8c00;
+            transition: width 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 0 10px rgba(255, 140, 0, 0);
+        }
+
+        nav a:hover {
+            color: #ff8c00;
+            transform: translateY(-3px);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.7);
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            min-height: 700px;
+            background: url('https://ik.imagekit.io/s95tumxuk/istockphoto-1416834065-612x612.jpg') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.7));
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s ease-out;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s ease-out 0.3s;
+        }
+
+        .hero .cta-button {
+            display: inline-block;
+            background: #ff8c00;
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s ease-out 0.6s, transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4);
+        }
+
+        .hero .cta-button:hover {
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 0 15px 40px rgba(255, 140, 0, 0.6);
+        }
+
+        /* Animations when visible */
+        .animate-in {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 5%;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tours {
+            background: white;
+        }
+
+        .tours h2, .booking h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #1a3c34;
+        }
+
+        .tour-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tour-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .tour-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .tour-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        .tour-card:hover img {
+            transform: scale(1.12);
+        }
+
+        .tour-card-content {
+            padding: 1.8rem;
+        }
+
+        .tour-card h3 {
+            font-size: 1.7rem;
+            margin-bottom: 1rem;
+            color: #1a3c34;
+        }
+
+        .tour-card a {
+            display: inline-block;
+            background: #ff8c00;
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .tour-card a:hover {
+            background: #e07b00;
+            transform: translateX(10px);
+        }
+
+        /* Booking Form */
+        .booking {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .booking-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: #1a3c34;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ff8c00;
+            box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.2);
+            transform: scale(1.02);
+        }
+
+        .submit-btn {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.4s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .submit-btn:hover {
+            background: #e07b00;
+            transform: translateY(-4px);
+            animation: none;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* Footer */
+        footer {
+            background: #1a3c34;
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+
+            section {
+                padding: 60px 5%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav a {
+                font-size: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.6rem;
+            }
+
+            .tour-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#tours">Tours</a></li>
+            <li><a href="Gallery.html">Gallery</a></li>
+            <li><a href="#booking">Book Now</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Discover the Pearl of Africa</h1>
+            <p>Unforgettable safaris, gorilla trekking, Nile adventures & authentic cultural experiences</p>
+            <a href="#tours" class="cta-button">Explore Tours</a>
+        </div>
+    </section>
+
+    <section class="tours" id="tours">
+        <h2>Our Signature Experiences</h2>
+        <div class="tour-grid">
+            <div class="tour-card">
+                <img src="https://ik.imagekit.io/s95tumxuk/images.jpg" alt="Gorilla">
+                <div class="tour-card-content">
+                    <h3>Gorilla Trekking</h3>
+                    <p>Come face-to-face with mountain gorillas in Bwindi's misty forests.</p>
+                    <a href="#booking">Book Now</a>
+                </div>
+            </div>
+
+            <div class="tour-card">
+                <img src="https://ik.imagekit.io/s95tumxuk/sight_pic_big2_1699.jpg" alt="Nile">
+                <div class="tour-card-content">
+                    <h3>Nile Safari</h3>
+                    <p>Wildlife, boat safaris & dramatic falls in Murchison Falls National Park.</p>
+                    <a href="#booking">Book Now</a>
+                </div>
+            </div>
+
+            <div class="tour-card">
+                <img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80" alt="Culture">
+                <div class="tour-card-content">
+                    <h3>Cultural Journey</h3>
+                    <p>Markets, villages, music & traditions in vibrant Kampala & beyond.</p>
+                    <a href="#booking">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="booking" id="booking">
+        <h2>Start Your Adventure</h2>
+        <form class="booking-form" action="https://formspree.io/f/your-form-id" method="POST">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tour">Tour Package</label>
+                <select id="tour" name="tour" required>
+                    <option value="">Select your adventure</option>
+                    <option value="gorilla">Gorilla Trekking – Bwindi</option>
+                    <option value="nile">Nile Safari – Murchison Falls</option>
+                    <option value="cultural">Cultural Journey – Kampala & Surrounds</option>
+                    <option value="custom">Custom Safari</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Preferred Travel Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message / Special Requests</label>
+                <textarea id="message" name="message" rows="4"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Booking Request</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>© 2026 Uganda Adventures • Creating Memories in the Pearl of Africa</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if (entry.target.classList.contains('hero')) {
+                        document.querySelector('.hero h1').classList.add('animate-in');
+                        document.querySelector('.hero p').classList.add('animate-in');
+                        document.querySelector('.hero .cta-button').classList.add('animate-in');
+                    }
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Hero subtle mouse move effect
+        const hero = document.querySelector('.hero');
+        hero.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            hero.style.backgroundPosition = `${x * 10}% ${y * 10}%`;
+        });
+    </script>
+
+</body>
+</html>
