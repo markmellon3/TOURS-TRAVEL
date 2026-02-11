@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Uganda Adventures</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f1f1a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navigation - consistent style */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.4s ease;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -6px;
+            left: 0;
+            background: #ff8c00;
+            transition: width 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        nav a:hover {
+            color: #ff8c00;
+            transform: translateY(-3px);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.7);
+        }
+
+        /* 404 Content */
+        .error-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 80px; /* space for fixed nav */
+        }
+
+        .error-content {
+            max-width: 800px;
+        }
+
+        .error-number {
+            font-size: clamp(8rem, 25vw, 18rem);
+            font-weight: 900;
+            line-height: 0.9;
+            color: #ff8c00;
+            text-shadow: 0 0 40px rgba(255, 140, 0, 0.4);
+            margin-bottom: 1rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .error-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+
+        .error-message {
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            margin-bottom: 2.5rem;
+            color: #d1d5db;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: #ff8c00;
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4);
+        }
+
+        .btn-home:hover {
+            background: #e07b00;
+            transform: translateY(-6px);
+            box-shadow: 0 15px 40px rgba(255, 140, 0, 0.6);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: #ff8c00;
+            font-size: 1.1rem;
+            text-decoration: underline;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Floating animation for 404 number */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
+        }
+
+        /* Background subtle animation */
+        .background-shapes {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 140, 0, 0.08);
+            border-radius: 50%;
+            animation: drift 25s infinite linear;
+        }
+
+        .shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: 15%;
+            animation-duration: 40s;
+        }
+
+        .shape:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            bottom: 5%;
+            right: 10%;
+            animation-duration: 55s;
+            animation-direction: reverse;
+        }
+
+        .shape:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            top: 60%;
+            left: 60%;
+            animation-duration: 35s;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(120px, -80px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem 1rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #d1d5db;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            .error-number {
+                font-size: clamp(6rem, 20vw, 12rem);
+            }
+
+            .error-title {
+                font-size: 3rem;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="index.htm">Home</a></li>
+            <li><a href="index.html#tours">Tours</a></li>
+            <li><a href="index.html#booking">Book Now</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="background-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <main class="error-container">
+        <div class="error-content">
+            <div class="error-number">404</div>
+            <h1 class="error-title">Lost in the Jungle?</h1>
+            <p class="error-message">
+                The page you're looking for doesn't exist or has wandered off on an adventure.<br>
+                Don't worry — even the best explorers get lost sometimes!
+            </p>
+
+            <a href="index.htm" class="btn-home">Return to Base Camp</a>
+            <br>
+            <a href="gallery.html" class="btn-secondary">Explore Our Gallery Instead</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Uganda Adventures • Still here to guide your journey</p>
+    </footer>
+
+</body>
+</html>
