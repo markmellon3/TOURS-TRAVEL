@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Uganda Adventures</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        /* Navigation (consistent with main page) */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.4s ease;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.4s ease;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -6px;
+            left: 0;
+            background: #ff8c00;
+            transition: width 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 0 10px rgba(255, 140, 0, 0);
+        }
+
+        nav a:hover {
+            color: #ff8c00;
+            transform: translateY(-3px);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.7);
+        }
+
+        /* Gallery Header */
+        .gallery-header {
+            height: 70vh;
+            min-height: 500px;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), 
+                        url('https://ik.imagekit.io/s95tumxuk/istockphoto-1416834065-612x612.jpg?updatedAt=1770735398122') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-top: 70px; /* space for fixed nav */
+        }
+
+        .gallery-header h1 {
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+        }
+
+        .gallery-header p {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            max-width: 800px;
+        }
+
+        /* Gallery Container */
+        .gallery {
+            padding: 80px 5% 120px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .gallery h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 2.5rem;
+            color: #1a3c34;
+            position: relative;
+        }
+
+        .gallery h2::after {
+            content: '';
+            width: 120px;
+            height: 4px;
+            background: #ff8c00;
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            aspect-ratio: 4 / 3;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.22);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+
+        .gallery-item h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Footer */
+        footer {
+            background: #1a3c34;
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gallery {
+                padding: 60px 4% 100px;
+            }
+
+            .gallery h2 {
+                font-size: 2.4rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-header h1 {
+                font-size: 3rem;
+            }
+
+            .gallery-item {
+                aspect-ratio: 1 / 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="index.htm">Home</a></li>
+            <li><a href="index.html#tours">Tours</a></li>
+            <li><a href="index.html#booking">Book Now</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header class="gallery-header">
+        <div>
+            <h1>Gallery</h1>
+            <p>Capturing the beauty and magic of Uganda's adventures</p>
+        </div>
+    </header>
+
+    <main class="gallery">
+
+        <h2>Gorilla Trekking – Bwindi Forest</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://www.ugandasafaristours.com/wp-content/uploads/2021/08/Gorilla-Trekking-Sectors-in-Bwindi-Forest.jpg" alt="Mountain gorillas in Bwindi">
+                <div class="overlay">
+                    <h3>Majestic Gorillas</h3>
+                    <p>Bwindi Impenetrable Forest</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://i.natgeofe.com/n/e28d3f21-b4da-4bc6-89b3-1ad01985a9b4/uganda_bwindi_mountain_gorilla.jpg" alt="Gorilla on hillside">
+                <div class="overlay">
+                    <h3>Close Encounter</h3>
+                    <p>Mountain Gorilla Family</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://www.timbuktutravel.com/cdn-cgi/image/quality=50,format=auto/https://assets.timbuktutravel.com/2018/03/0-gorilla-trekking-bwindi-forest-uganda-timbuktu-travel.jpg" alt="Gorilla portrait">
+                <div class="overlay">
+                    <h3>Face to Face</h3>
+                    <p>Bwindi National Park</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.squarespace-cdn.com/content/v1/63ff291c8cf8fd1dab8e45bf/ce8a0d10-c164-492f-b48a-51634ef7d5d0/gorilla-trekking-bwindi-impenetrable-uganda-photos.jpg" alt="Silverback gorilla">
+                <div class="overlay">
+                    <h3>Silverback King</h3>
+                    <p>Impenetrable Forest</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Nile Safari – Murchison Falls</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://exclusiveugandasafaris.com/wp-content/uploads/2022/03/A-boat-cruise-in-Murchison-Falls-National-Park.jpg" alt="Boat cruise near falls">
+                <div class="overlay">
+                    <h3>Nile Boat Cruise</h3>
+                    <p>Murchison Falls</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://www.greatadventuresafaris.com/wp-content/uploads/Nile-River-excursion-at-Murchison-falls-1200x675.jpg" alt="Boat approaching falls">
+                <div class="overlay">
+                    <h3>Dramatic Falls</h3>
+                    <p>Murchison Falls National Park</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://gorilladiscovery.com/wp-content/uploads/2021/10/Delta-boat-cruise-safaris-in-Murchison-Falls-National-Park.jpg" alt="Double-decker boat">
+                <div class="overlay">
+                    <h3>Safari Cruise</h3>
+                    <p>Nile Delta</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://primatesafricasafaris.com/wp-content/uploads/2024/09/28-1080x580.webp" alt="Wildlife on Nile">
+                <div class="overlay">
+                    <h3>Wildlife Viewing</h3>
+                    <p>Murchison Falls</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Cultural Experiences</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="http://greenwaynaturetours.com/wp-content/uploads/2025/02/Ndere-Cultural-Centre-Dance-Troupe-in-Kampala.webp" alt="Traditional dance performance">
+                <div class="overlay">
+                    <h3>Traditional Dance</h3>
+                    <p>Ndeere Cultural Centre</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://hometoafrica.com/wp-content/uploads/2024/12/Cultural-Experience.jpg" alt="Cultural performers">
+                <div class="overlay">
+                    <h3>Authentic Culture</h3>
+                    <p>Ugandan Traditions</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Rwenzori Mountains & Lake Bunyonyi</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://destinationuganda.com/wp-content/uploads/2022/09/Rwenzori-mountains-012308.jpg" alt="Rwenzori peaks">
+                <div class="overlay">
+                    <h3>Mountains of the Moon</h3>
+                    <p>Rwenzori National Park</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://www.africangorilla.com/wp-content/uploads/2023/12/Mount-Rwenzori-Hiking-Tours-1024x683.jpg" alt="Rwenzori landscape">
+                <div class="overlay">
+                    <h3>Scenic Trails</h3>
+                    <p>Rwenzori Mountains</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://www.africanpearlsafaris.com/wp-content/uploads/2020/11/beautiful-lake-bunyonyi.jpg" alt="Lake Bunyonyi view">
+                <div class="overlay">
+                    <h3>Lake Bunyonyi</h3>
+                    <p>Land of a Thousand Hills</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://cdn.audleytravel.com/2776/1985/79/8003027-lake-bunyonyi.jpg" alt="Lake Bunyonyi islands">
+                <div class="overlay">
+                    <h3>Serenity on the Lake</h3>
+                    <p>Bunyonyi Paradise</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="close-btn" id="close">&times;</span>
+        <img id="lightbox-img" src="" alt="Enlarged gallery image">
+    </div>
+
+    <footer>
+        <p>© 2026 Uganda Adventures • Capturing the Pearl of Africa</p>
+    </footer>
+
+    <script>
+        // Lightbox functionality
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.getElementById('close');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                lightboxImg.src = imgSrc;
+                lightbox.classList.add('active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        // Smooth scroll for nav links (if needed)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
